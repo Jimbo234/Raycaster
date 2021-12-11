@@ -2,12 +2,26 @@ class Player {
   constructor(x, y, dir) {
     this.x = x;
     this.y = y;
+    this.z = 0;
+    this.zvel = 0;
     this.dir = dir;
+    this.ydir = 0;
     this.speed = 1.5;
   }
   
   update(){
     inputs.shift ? this.speed = 2.6: this.speed = 1.3;
+    
+    if (inputs.jump && this.z === 0) this.zvel = 12;
+    
+    this.zvel -= 0.9;
+    
+    this.z += this.zvel;
+    
+    if (this.z < 0){
+      this.z = 0;
+      this.zvel = 0;
+    }
     
     if (inputs.up) {
       this.x += Math.cos(this.dir) * this.speed;
@@ -38,6 +52,10 @@ class Player {
     }
     
     this.dir += inputs.deltaMouseX/120;
+    this.ydir += inputs.deltaMouseY/300;
+    
+    if (this.ydir >  Math.PI/4) this.ydir =  Math.PI/4;
+    if (this.ydir < -Math.PI/4) this.ydir = -Math.PI/4;
     
     this.draw();
     
@@ -254,20 +272,20 @@ class Scene3D {
     ctx3d.fillStyle = "#311";
     ctx3d.fillRect(0, 0, 512, 512);
     ctx3d.fillStyle = "#711";
-    ctx3d.fillRect(0, 256, 512, 256);
+    ctx3d.fillRect(0, 256  + Math.tan(player.ydir) * -512, 512, 256 - Math.tan(player.ydir) * -512);
     
     
     
     for (let i = 0; i<512; i++){
       let fov = document.getElementById("fov").value/2000;
       
-      let angle = (-256 + i)*fov 
+      let angle = (-256 + i)*fov;
       
       let ray = player.castRay(player.dir + angle);
       
       ray.dist = ray.dist * Math.cos(angle);
       
-      let height = 16*(512/ray.dist);
+      let height = 20*(512/ray.dist);
       
       let c = getColor(ray.id);
       
@@ -279,7 +297,7 @@ class Scene3D {
         if (ray.type == "y") d-= 30;
         
         ctx3d.fillStyle = rgb(c.r + d,c.g + d,c.b + d);
-        ctx3d.fillRect(i, 256 - height/2, 1, height);
+        ctx3d.fillRect(i, 256 - height/2 + player.z * height/160 + Math.tan(player.ydir) * -512, 1, height);
       }
     }
   }
@@ -361,6 +379,7 @@ function initInput(){
     left: false,
     right: false,
     shift: false,
+    jump: false,
     deltaMouseX: 0,
     deltaMouseY: 0,
   };
@@ -371,6 +390,7 @@ function initInput(){
     left: 65,
     right: 68,
     shift: 16,
+    jump: 32,
   };
   
   document.addEventListener("keydown", function(e){
@@ -389,6 +409,9 @@ function initInput(){
     if (e.keyCode == keybinds.shift){
       inputs.shift = true;
     }
+    if (e.keyCode == keybinds.jump){
+      inputs.jump = true;
+    }
   });
   
   document.addEventListener("keyup", function(e){
@@ -406,6 +429,9 @@ function initInput(){
     }
     if (e.keyCode == keybinds.shift){
       inputs.shift = false;
+    }
+    if (e.keyCode == keybinds.jump){
+      inputs.jump = false;
     }
   });
   
