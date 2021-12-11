@@ -272,9 +272,9 @@ class Scene3D {
     let w = canvas3d.width;
     let h = canvas3d.height;
     
-    ctx3d.fillStyle = "#311";
+    ctx3d.fillStyle = "#ADF";
     ctx3d.fillRect(0, 0, w, h);
-    ctx3d.fillStyle = "#711";
+    ctx3d.fillStyle = "#7C1";
     ctx3d.fillRect(0, h/2  + Math.tan(player.ydir) * -h/1.5, w, h - Math.tan(player.ydir) * -h/2);
     
     for (let i = 0; i<w; i++){
@@ -293,7 +293,7 @@ class Scene3D {
 
       
       if (height > 0){
-        let d = 24-height/8;
+        let d = 22-height/8;
         
         if (ray.type == "y") d-= 30;
         
@@ -354,7 +354,7 @@ function main() {
   map = new Map();
   
   resize();
-  document.addEventListener("resize", resize());
+  document.addEventListener("resize", resize);
   
   document.addEventListener("click", function(){
     canvas3d.requestPointerLock = canvas3d.requestPointerLock ||
