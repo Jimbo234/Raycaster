@@ -350,11 +350,11 @@ function main() {
   
   scene3d = new Scene3D();
   
-  player = new Player(256, 256, 6.073745796940267);
+  player = new Player(256, 256, 0);
   map = new Map();
   
   resize();
-  document.addEventListener("resize", resize);
+  window.addEventListener("resize", resize);
   
   document.addEventListener("click", function(){
     canvas3d.requestPointerLock = canvas3d.requestPointerLock ||
