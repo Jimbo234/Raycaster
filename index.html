@@ -4,33 +4,27 @@
     <meta charset="UTF-8">
     <title>Raycaster</title>
     <style> 
+    * {
+      margin: 0;
+    }
+    
     body {
       background-color: #EEE;
       text-align: center;
+      overflow: hidden;
     }
     
     canvas {
       background-color: #FFF;
-      border: #000 1px solid;
-      box-shadow: 4px 4px;
-      margin: 0 10px 0 10px;
-      
-      border-radius: 4px;
     }
     </style>
     
     <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body onload="main()">
-  <h1>Raycaster 2.0</h1>
-  <canvas id="2d" width="512" height="512"></canvas>
+  <canvas id="2d" style="display:none;" width="512" height="512"></canvas>
   
   <canvas id="3d" width="512" height="512"></canvas>
-  
-  <p>FOV</p>
-  <input type="range" min="1" max="12" value="4" id="fov">
-  
-  <p> Controls: <br> WASD: Movement <br> Space: Jump <br> Mouse: Look around (click to lock cursor) <br> Shift: Sprint </p>
 
 </body>
 </html>
