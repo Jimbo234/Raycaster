@@ -269,23 +269,24 @@ class Scene3D {
   }
   
   render(){
+    let w = canvas3d.width;
+    let h = canvas3d.height;
+    
     ctx3d.fillStyle = "#311";
-    ctx3d.fillRect(0, 0, 512, 512);
+    ctx3d.fillRect(0, 0, w, h);
     ctx3d.fillStyle = "#711";
-    ctx3d.fillRect(0, 256  + Math.tan(player.ydir) * -512, 512, 256 - Math.tan(player.ydir) * -512);
+    ctx3d.fillRect(0, h/2  + Math.tan(player.ydir) * -h/1.5, w, h - Math.tan(player.ydir) * -h/2);
     
-    
-    
-    for (let i = 0; i<512; i++){
-      let fov = document.getElementById("fov").value/2000;
+    for (let i = 0; i<w; i++){
+      let fov = 2/2000;
       
-      let angle = (-256 + i)*fov;
+      let angle = (-w/2 + i)*fov;
       
       let ray = player.castRay(player.dir + angle);
       
       ray.dist = ray.dist * Math.cos(angle);
       
-      let height = 20*(512/ray.dist);
+      let height = 20*(h/ray.dist);
       
       let c = getColor(ray.id);
       
@@ -297,9 +298,15 @@ class Scene3D {
         if (ray.type == "y") d-= 30;
         
         ctx3d.fillStyle = rgb(c.r + d,c.g + d,c.b + d);
-        ctx3d.fillRect(i, 256 - height/2 + player.z * height/160 + Math.tan(player.ydir) * -512, 1, height);
+        ctx3d.fillRect(i, h/2 - height/2 + player.z * height/160 + Math.tan(player.ydir) * -h/1.5, 1, height);
       }
     }
+    
+    ctx3d.drawImage(canvas2d, 20, 20, 100, 100);
+    
+    ctx3d.fillStyle="rgba(255, 255, 255, 0.8)"
+    ctx3d.fillRect(w/2 - 6, h/2 - 1, 12, 2);
+    ctx3d.fillRect(w/2 - 1, h/2 - 6, 2, 12);
   }
 }
 
@@ -346,6 +353,9 @@ function main() {
   player = new Player(256, 256, 6.073745796940267);
   map = new Map();
   
+  resize();
+  document.addEventListener("resize", resize());
+  
   document.addEventListener("click", function(){
     canvas3d.requestPointerLock = canvas3d.requestPointerLock ||
                                 canvas3d.mozRequestPointerLock;
@@ -359,7 +369,7 @@ function main() {
 
 function update(){
   ctx2d.clearRect(0, 0, canvas2d.width, canvas2d.height);
-  ctx3d.clearRect(0, 0, canvas2d.width, canvas2d.height);
+  ctx3d.clearRect(0, 0, canvas3d.width, canvas3d.height);
   
   map.draw();
   player.update();
@@ -372,6 +382,10 @@ function update(){
   requestAnimationFrame(update);
 }
 
+function resize(){
+  canvas3d.height = window.innerHeight;
+  canvas3d.width = window.innerWidth;
+}
 function initInput(){
   inputs = {
     up: false,
