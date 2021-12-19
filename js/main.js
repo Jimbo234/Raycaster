@@ -367,6 +367,7 @@ class Scene3D {
     for (let i = 0; i<w; i+=q){
       
       let angle = (-w/2 + i)*fov;
+      angle = xRayAngles[i];
       
       let ray = player.castRay(player.cx, player.cy, player.dir + angle);
       
@@ -536,6 +537,9 @@ function main() {
   
   data = bctx.getImageData(0, 0, 32, 32).data;
   
+  xRayAngles = [];
+  
+  FOV = 1200;
   
   
   resize();
@@ -598,6 +602,13 @@ function resize(){
   for (let i=0; i<filter.height/3; i++){
     ctxf.fillStyle = "rgba(0,0,0,0.4)";
     //ctxf.fillRect(0, i*3, filter.width, 2);
+  }
+  
+  xRayAngles = [];
+  for( var i = 0; i < canvas3d.width; i++ ){
+
+    var xAng = Math.atan( ( i - canvas3d.width/2 ) / (2000 - FOV));
+    xRayAngles.push( xAng );
   }
 }
 function initInput(){
